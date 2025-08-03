@@ -1,0 +1,18 @@
+{
+  "vehicles": [
+    "23xc90bs",
+    "addonvehiclename2"
+  ],
+  "peds": [
+    "addonpedname1",
+    "addonpedname2"
+  ],
+  "weapons": [
+    "addonweaponname1",
+    "addonweaponname2"
+  ],
+  "weapon_components": [
+    "weapon_component_name_1",
+    "weapon_component_name_2"
+  ]
+}
