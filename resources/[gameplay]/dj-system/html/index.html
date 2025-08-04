@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="dj-menu" class="menu-container">
+        <div class="menu-header">
+            <h1>🎵 DJ System</h1>
+            <p id="booth-name">Loading...</p>
+        </div>
+        
+        <div class="menu-content">
+            <div class="track-list">
+                <h3>Select Track:</h3>
+                <div id="tracks-container">
+                    <!-- Tracks will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="stop-btn" class="btn btn-danger">⏹️ Stop Music</button>
+                <button id="close-btn" class="btn btn-secondary">❌ Close Menu</button>
+            </div>
+        </div>
+        
+        <div class="menu-footer">
+            <p>Press BACKSPACE to stop music from outside menu</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
