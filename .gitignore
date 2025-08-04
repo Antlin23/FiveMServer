@@ -42,4 +42,7 @@ Thumbs.db
 # FiveM specific
 artifacts/
 citizen/
-citizenfx/ 
+citizenfx/
+
+# Server configuration files (contain sensitive information)
+server.cfg 
