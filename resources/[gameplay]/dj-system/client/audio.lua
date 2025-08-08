@@ -9,14 +9,37 @@ Citizen.CreateThread(function()
     print("^2[DJ System]^7 Audio system initialized (no map blips)")
 end)
 
--- Player position tracking for 3D audio
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(100) -- Update every 100ms for smooth 3D audio
-        
+        Citizen.Wait(1000) -- Check every second
+
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
-        
+
+        -- Check active audio sessions
+        for boothName, audio in pairs(activeAudio) do
+            local booth = audio.booth
+            local distance = #(playerCoords - booth.coords)
+
+            if distance > booth.radius then
+                -- Player is too far, mute audio but keep session active
+                SendNUIMessage({
+                    type = "updateVolume",
+                    boothName = boothName,
+                    volume = 0.0
+                })
+                print("^3[DJ System]^7 Audio muted (too far) for " .. boothName)
+            else
+                -- Player is in range, unmute audio
+                SendNUIMessage({
+                    type = "updateVolume",
+                    boothName = boothName,
+                    volume = 0.5 -- or your preferred volume
+                })
+                print("^2[DJ System]^7 Audio unmuted for " .. boothName)
+            end
+        end
+
         -- Only send position if player has moved significantly
         if #(playerCoords - lastPlayerPosition) > 0.5 then
             lastPlayerPosition = playerCoords
@@ -28,6 +51,8 @@ Citizen.CreateThread(function()
                 z = playerCoords.z
             })
         end
+
+        -- No need to restart audio when re-entering, just unmute above
     end
 end)
 
@@ -116,40 +141,6 @@ AddEventHandler('onResourceStop', function(resourceName)
     if GetCurrentResourceName() == resourceName then
         for boothName, audio in pairs(activeAudio) do
             StopAudio(boothName)
-        end
-    end
-end)
-
--- Audio distance checking and volume control
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(1000) -- Check every second
-        
-        local playerPed = PlayerPedId()
-        local playerCoords = GetEntityCoords(playerPed)
-        
-        -- Check active audio sessions
-        for boothName, audio in pairs(activeAudio) do
-            local booth = audio.booth
-            local distance = #(playerCoords - booth.coords)
-            
-            if distance > booth.radius then
-                -- Player is too far, stop audio but keep session active
-                StopAudio(boothName)
-                print("^3[DJ System]^7 Audio stopped (too far) for " .. boothName)
-            end
-        end
-        
-        -- Check if player re-entered any active music session areas
-        for boothName, session in pairs(activeMusicSessions) do
-            local booth = session.booth
-            local distance = #(playerCoords - booth.coords)
-            
-            if distance <= booth.radius and not activeAudio[boothName] then
-                -- Player re-entered area, restart audio
-                StartAudio(boothName, session.trackName, booth)
-                print("^2[DJ System]^7 Audio restarted for " .. boothName)
-            end
         end
     end
 end)
