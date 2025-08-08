@@ -6,7 +6,7 @@ local dancerModels = {
     "s_f_y_clubbar_01"     -- female partier, black clothes
 }local dancerPositions = {
     vector4(-1388.0, -620.0, 30.82, 314.0), -- In front of Bahama Mamas dj set
-    vector4(-1389.0, -616.0, 31.0, 300.0),
+    vector4(-1389.0, -616.0, 30.82, 300.0),
     vector4(-1384.0, -619.0, 30.82, 317.5),
     vector4(-1387.0, -617.4, 30.82, 295.5),
     vector4(-1385.1, -628.63, 30.82, 352.32)
