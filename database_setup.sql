@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `music_tracks` (
 
 -- Insert default DJ booths (you can modify these coordinates)
 INSERT INTO `dj_booths` (`name`, `x`, `y`, `z`, `heading`, `radius`) VALUES
-('Bahama Mamas', -1388.5, -586.2, 30.2, 35.0, 50.0),
+('Bahama Mamas', -1382.4, -615.6, 31, 35.0, 50.0),
 ('Vanilla Unicorn', 127.5, -1284.5, 29.3, 120.0, 40.0),
 ('Galaxy Nightclub', 126.5, -1284.5, 29.3, 120.0, 45.0)
 ON DUPLICATE KEY UPDATE `active` = 1;

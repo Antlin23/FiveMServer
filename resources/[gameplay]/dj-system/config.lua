@@ -4,42 +4,24 @@ Config = {}
 Config.DJBooths = {
     {
         name = "Bahama Mamas",
-        coords = vector3(-1388.5, -586.2, 30.2),
+        coords = vector3(-1382.4, -615.6, 31),
         heading = 35.0,
-        radius = 50.0, -- Music will be heard within this radius
-        staffOnly = true,
-        blip = {
-            sprite = 136,
-            color = 5,
-            scale = 0.8,
-            name = "DJ Booth - Bahama Mamas"
-        }
+        radius = 20.0,
+        staffOnly = true
     },
     {
         name = "Vanilla Unicorn",
         coords = vector3(127.5, -1284.5, 29.3),
         heading = 120.0,
-        radius = 40.0,
-        staffOnly = true,
-        blip = {
-            sprite = 136,
-            color = 5,
-            scale = 0.8,
-            name = "DJ Booth - Vanilla Unicorn"
-        }
+        radius = 20.0,
+        staffOnly = true
     },
     {
         name = "Galaxy Nightclub",
         coords = vector3(126.5, -1284.5, 29.3),
         heading = 120.0,
-        radius = 45.0,
-        staffOnly = true,
-        blip = {
-            sprite = 136,
-            color = 5,
-            scale = 0.8,
-            name = "DJ Booth - Galaxy"
-        }
+        radius = 22.0,
+        staffOnly = true
     }
 }
 
