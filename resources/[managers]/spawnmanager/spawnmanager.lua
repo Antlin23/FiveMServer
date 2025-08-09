@@ -214,10 +214,10 @@ function spawnPlayer(spawnIdx, cb)
     Citizen.CreateThread(function()
         -- HARDCODED SPAWN COORDINATES - always spawn at the same location
         local hardcodedSpawn = {
-            x = -802.311,  -- Change these coordinates to your desired spawn location
-            y = 175.056,   -- You can use any coordinates from the map files
-            z = 72.8446,   -- or set your own custom coordinates
-            heading = 0.0, -- Direction player faces (0-360 degrees)
+            x = -826.4,  -- Change these coordinates to your desired spawn location
+            y = 175.2,   -- You can use any coordinates from the map files
+            z = 70.87,   -- or set your own custom coordinates
+            heading = 133.5, -- Direction player faces (0-360 degrees)
             model = nil    -- Set to nil to keep default player model, or specify a model hash
         }
 

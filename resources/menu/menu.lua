@@ -4,12 +4,19 @@ _menuPool:Add(mainMenu)
 
 
 
--- DRIFT COUNTER
 local isDrifting = false
 local driftPoints = 0
 local driftTimer = 0
 local driftUIActive = false
 local showDriftCounter = true
+-- Cash balance (client-side display only)
+local playerCash = 0
+
+RegisterNetEvent('drift:cashUpdated')
+AddEventHandler('drift:cashUpdated', function(newCash)
+    playerCash = newCash
+    notify("💰 Balance: " .. playerCash)
+end)
 --ENDS
 
 --LEADERBOARD
@@ -282,6 +289,8 @@ Citizen.CreateThread(function()
                 if driftPoints > 0 then
                     notify("🔥Score: " .. math.floor(driftPoints))
                     updateDriftScore(playerId, playerName, math.floor(driftPoints))
+                        -- Add drift points to cash
+                        TriggerServerEvent('drift:addCash', math.floor(driftPoints))
                 end
 
                 isDrifting = false
@@ -334,6 +343,8 @@ Citizen.CreateThread(function()
                             if driftPoints > 0 then
                                 notify("🔥Score: " .. math.floor(driftPoints))
                                 updateDriftScore(playerId, playerName, math.floor(driftPoints))
+                                    -- Add drift points to cash
+                                    TriggerServerEvent('drift:addCash', math.floor(driftPoints))
                             end
                     
                             -- Reset drift state
