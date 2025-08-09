@@ -15,12 +15,18 @@ local showDriftCounter = true
 --LEADERBOARD
 local driftLeaderboard = {}
 
-
--- Function to update drift scores
 function updateDriftScore(playerId, playerName, score)
-    if not driftLeaderboard[playerId] or score > driftLeaderboard[playerId].score then
-        driftLeaderboard[playerId] = { name = playerName, score = score }
-    end
+    local identifier = GetPlayerServerId(PlayerId())
+    TriggerServerEvent('drift:saveScore', identifier, playerName, score)
+end
+
+RegisterNetEvent('drift:sendLeaderboard')
+AddEventHandler('drift:sendLeaderboard', function(leaderboard)
+    driftLeaderboard = leaderboard
+end)
+
+function getSortedLeaderboard()
+    return driftLeaderboard or {}
 end
 --
 
@@ -41,6 +47,10 @@ function ShowDriftLeaderboard(menu)
 
     leaderboardButton.Activated = function(sender, item)
         mainMenu:Visible(false) -- Close main menu
+
+        -- Request leaderboard from server
+        TriggerServerEvent('drift:getLeaderboard')
+        Citizen.Wait(500) -- Wait for server response
 
         local leaderboardMenu = NativeUI.CreateMenu("Leaderboard", "Top Drift Scores")
         _menuPool:Add(leaderboardMenu)

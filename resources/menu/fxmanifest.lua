@@ -17,3 +17,7 @@ client_scripts {
     "@NativeUI/NativeUI.lua",
     "menu.lua",
 }
+
+server_scripts {
+    '@mysql-async/lib/MySQL.lua',
+    'server/drift_leaderboard.lua'}
