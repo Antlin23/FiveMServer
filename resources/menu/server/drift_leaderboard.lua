@@ -82,6 +82,20 @@ AddEventHandler('drift:addCash', function(amount)
     TriggerClientEvent('drift:cashUpdated', src, playerCash[src])
 end)
 
+RegisterNetEvent('drift:payForDriftTune')
+AddEventHandler('drift:payForDriftTune', function(cost)
+    local src = source
+    local identifier = GetPlayerIdentifier(src, 0)
+    if not playerCash[src] then playerCash[src] = 0 end
+    playerCash[src] = playerCash[src] - cost
+    if playerCash[src] < 0 then playerCash[src] = 0 end
+    MySQL.Async.execute('UPDATE player_cash SET cash = @cash WHERE identifier = @identifier', {
+        ['@cash'] = playerCash[src],
+        ['@identifier'] = identifier
+    })
+    TriggerClientEvent('drift:cashUpdated', src, playerCash[src])
+end)
+
 AddEventHandler('playerDropped', function(reason)
     local src = source
     playerCash[src] = nil -- Remove cash data when player leaves

@@ -141,3 +141,17 @@ RegisterNUICallback('closeMenu', function(data, cb)
     SetNuiFocus(false, false)
     cb('ok')
 end) 
+
+-- Add Bahama Club blip on map
+Citizen.CreateThread(function()
+    local bahamaCoords = vector3(-1393, -586.44, 30.22) -- Bahama Mamas location
+    local blip = AddBlipForCoord(bahamaCoords.x, bahamaCoords.y, bahamaCoords.z)
+    SetBlipSprite(blip, 93) -- Club icon
+    SetBlipDisplay(blip, 4)
+    SetBlipScale(blip, 0.9)
+    SetBlipColour(blip, 27) -- Purple
+    SetBlipAsShortRange(blip, true)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentString("Bahama Club")
+    EndTextCommandSetBlipName(blip)
+end)

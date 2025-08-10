@@ -16,6 +16,7 @@ files {
 client_scripts {
     "@NativeUI/NativeUI.lua",
     "menu.lua",
+    "drift_tuner.lua"
 }
 
 server_scripts {

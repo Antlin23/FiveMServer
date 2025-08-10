@@ -101,14 +101,21 @@ end
 
 
 function DriftModeButton(menu)
-    local driftButton = NativeUI.CreateItem("Drift tune", "Install drift tune into this vehicle (cannot be reverted).")
+    local driftButton = NativeUI.CreateItem("Drift tune ($10,000)", "Install drift tune into this vehicle for $100,000 (cannot be reverted). You must have enough cash.")
     menu:AddItem(driftButton)
 
     driftButton.Activated = function(sender, item)
         local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+        local driftTuneCost = 10000
 
         if item == driftButton then
             if vehicle ~= 0 then
+                if playerCash < driftTuneCost then
+                    notify("❌ Not enough cash! Drift tune costs $" .. driftTuneCost)
+                    return
+                end
+                playerCash = playerCash - driftTuneCost
+                TriggerServerEvent('drift:payForDriftTune', driftTuneCost)
                 -- Toggle Drift Mode (not in use atm)
                 isDrifting = true
 
