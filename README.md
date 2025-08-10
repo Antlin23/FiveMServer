@@ -1,9 +1,9 @@
-Mod menu (hack) for FiveM (GTA 5).
+FiveM server
 
-Drift tune any vehicle, drift counter and more.
+Drift tune any vehicle, drift counter, club dj menu, custom songs and more.
 
-HOW TO USE DRIFT MENU
+HOW TO INSTALL DRIFT MENU IN YOUR FIVEM SERVER
 
 Install zip file,
-Create folder in resources folder and extract all files in resources/menu there.
- Add "ensure menu" in server.cfg
+Create a folder in resources folder and extract all files from this project under resources/menu there.
+Add "ensure menu" in your server.cfg
