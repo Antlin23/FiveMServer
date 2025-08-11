@@ -25,67 +25,57 @@ Citizen.CreateThread(function()
             DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
             if IsControlJustPressed(0, 51) then -- E key
-                    -- Add cool effect: screen fade and camera shake
+                    -- Add cool effect: screen fade
                     DoScreenFadeOut(500)
                     Citizen.Wait(600)
+
                     -- Teleport both vehicle and player inside
                     SetEntityCoords(playerVeh, bennysInside.x, bennysInside.y, bennysInside.z, false, false, false, true)
                     SetEntityHeading(playerVeh, insideHeading)
                     SetEntityCoords(playerPed, bennysInside.x, bennysInside.y, bennysInside.z, false, false, false, true)
                     SetEntityHeading(playerPed, insideHeading)
                     TaskWarpPedIntoVehicle(playerPed, playerVeh, -1)
+
+                    SetVehicleFixed(playerVeh) -- Restores car health
+                    SetVehicleDirtLevel(playerVeh, 0.0) -- Cleans car
                     DoScreenFadeIn(800)
                 insideTuner = true
-
-                -- Freeze player, make invisible, disable controls
-                FreezeEntityPosition(playerPed, true)
-                    -- Do not block all controls, just make invisible and freeze
-                    -- Prevent driving car
-                notify("Spectating your car. Press [E] to exit.")
+                TriggerEvent('drift:isInTuner', true)
                 tunerCooldown = 200 -- about 3 seconds
             end
         end
 
         if insideTuner then
                 -- Block movement and vehicle controls
-                DisableControlAction(0, 30, true) -- Move left/right
-                DisableControlAction(0, 31, true) -- Move forward/back
-                DisableControlAction(0, 32, true) -- Move up
-                DisableControlAction(0, 33, true) -- Move down
-                DisableControlAction(0, 34, true) -- Move left
-                DisableControlAction(0, 35, true) -- Move right
                 DisableControlAction(0, 63, true) -- Vehicle controls
                 DisableControlAction(0, 64, true)
                 DisableControlAction(0, 71, true)
                 DisableControlAction(0, 72, true)
                 DisableControlAction(0, 75, true) -- Exit vehicle
-
-                -- Show exit prompt
-                SetTextComponentFormat("STRING")
-                AddTextComponentString("Press ~INPUT_CONTEXT~ to exit Drift Tuner")
-                DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-
-                    if IsControlJustPressed(0, 51) and tunerCooldown == 0 then -- E key and cooldown expired
-                        DoScreenFadeOut(500)
-                        Citizen.Wait(600)
-                        
-                        -- Teleport both vehicle and player outside
-                        SetEntityCoords(playerVeh, bennysExit.x, bennysExit.y, bennysExit.z, false, false, false, true)
-                        SetEntityHeading(playerVeh, insideHeading)
-                        SetEntityCoords(playerPed, bennysExit.x, bennysExit.y, bennysExit.z, false, false, false, true)
-                        SetEntityHeading(playerPed, insideHeading)
-                        TaskWarpPedIntoVehicle(playerPed, playerVeh, -1)
-                        DoScreenFadeIn(800)
-                        insideTuner = false
-
-                        -- Unfreeze, make visible
-                        FreezeEntityPosition(playerPed, false)
-                        SetEntityVisible(playerPed, true)
-                        notify("Exited Drift Tuner.")
-                        tunerCooldown = 200 -- about 3 seconds
-                    end
         end
     end
+end)
+
+
+
+RegisterNetEvent('drift:exitTuner')
+AddEventHandler('drift:exitTuner', function()
+    local playerPed = PlayerPedId()
+    local playerVeh = GetVehiclePedIsIn(playerPed, false)
+    DoScreenFadeOut(500)
+    Citizen.Wait(600)
+    SetEntityCoords(playerVeh, bennysExit.x, bennysExit.y, bennysExit.z, false, false, false, true)
+    SetEntityHeading(playerVeh, insideHeading)
+    SetEntityCoords(playerPed, bennysExit.x, bennysExit.y, bennysExit.z, false, false, false, true)
+    SetEntityHeading(playerPed, insideHeading)
+    TaskWarpPedIntoVehicle(playerPed, playerVeh, -1)
+    DoScreenFadeIn(800)
+    insideTuner = false
+    TriggerEvent('drift:isInTuner', false)
+    FreezeEntityPosition(playerPed, false)
+    SetEntityVisible(playerPed, true)
+    notify("Exited Drift Tuner.")
+    tunerCooldown = 200 -- about 3 seconds
 end)
 
 function notify(text)

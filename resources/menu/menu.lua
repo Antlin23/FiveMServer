@@ -3,6 +3,25 @@ mainMenu = NativeUI.CreateMenu("OVERLOAD", "~b~OVERLOAD MOD MENU")
 _menuPool:Add(mainMenu)
 
 
+_remoteMenuPool = NativeUI.CreatePool()
+remoteMenu = NativeUI.CreateMenu("DRIFT OPTIONS", "~b~OVERLOAD MOD MENU")
+_remoteMenuPool:Add(remoteMenu)
+
+
+-- Drift tuner
+local isInDriftTuner = false
+
+RegisterNetEvent('drift:isInTuner')
+AddEventHandler('drift:isInTuner', function(state)
+    isInDriftTuner = state
+    if isInDriftTuner then
+        mainMenu:Visible(true)
+        SetCursorLocation(0.5, 0.5)
+    else
+        mainMenu:Visible(false)
+    end
+end)
+
 
 local isDrifting = false
 local driftPoints = 0
@@ -53,7 +72,7 @@ function ShowDriftLeaderboard(menu)
     menu:AddItem(leaderboardButton)
 
     leaderboardButton.Activated = function(sender, item)
-        mainMenu:Visible(false) -- Close main menu
+        menu:Visible(false) -- Close parent menu (mainMenu or remoteMenu)
 
         -- Request leaderboard from server
         TriggerServerEvent('drift:getLeaderboard')
@@ -69,13 +88,21 @@ function ShowDriftLeaderboard(menu)
                 Citizen.Wait(0)
                 DisableControlAction(0, 1, true)  -- Disable Look Left/Right
                 DisableControlAction(0, 2, true)  -- Disable Look Up/Down
-                DisableControlAction(0, 30, true) -- Disable Move Left/Right
-                DisableControlAction(0, 31, true) -- Disable Move Forward/Backward
-                DisableControlAction(0, 32, true) -- Disable Move Up
-                DisableControlAction(0, 33, true) -- Disable Move Down
-                DisableControlAction(0, 34, true) -- Disable Move Left
-                DisableControlAction(0, 35, true) -- Disable Move Right
             end
+            -- When leaderboard menu is closed, reset mouse look and reopen parent menu
+            Citizen.Wait(100)
+            -- Reset mouse look direction and mouse input to stop camera spinning
+            SetGameplayCamRelativeHeading(0.0)
+            SetGameplayCamRelativePitch(0.0, 1.0)
+            -- Lock mouse and repeatedly set cursor to center for a short time
+            for i = 1, 20 do
+                SetCursorLocation(0.5, 0.5)
+                SetMouseCursorActiveThisFrame()
+                DisableControlAction(0, 1, true)  -- Disable Look Left/Right
+                DisableControlAction(0, 2, true)  -- Disable Look Up/Down
+                Citizen.Wait(10)
+            end
+            menu:Visible(true)
         end)
 
         local sortedLeaderboard = getSortedLeaderboard()
@@ -97,11 +124,9 @@ function ShowDriftLeaderboard(menu)
 end
 
 
---END
-
-
+-- Drift mode button
 function DriftModeButton(menu)
-    local driftButton = NativeUI.CreateItem("Drift tune ($10,000)", "Install drift tune into this vehicle for $100,000 (cannot be reverted). You must have enough cash.")
+    local driftButton = NativeUI.CreateItem("Drift tune ($100,000)", "Install drift tune into this vehicle for $100,000 (cannot be reverted).")
     menu:AddItem(driftButton)
 
     driftButton.Activated = function(sender, item)
@@ -151,7 +176,7 @@ function DriftModeButton(menu)
                 -- Body roll
                 SetVehicleHandlingFloat(vehicle, "CHandlingData", "fAntiRollBarForce", 0.3)
 
-                notify("🔥 Drift Mode ON 🏎️💨")
+                notify("🔥 Drift Tune installed🏎️💨 Remember to save/replace your vehicle")
                 
             else
                 notify("🚗 You are not in a vehicle!")
@@ -178,6 +203,21 @@ function ShowDriftCounterButton(menu)
     end
 end
 
+-- Exit drift counter button
+function ExitDriftTunerButton(menu)
+    local exitTunerButton = NativeUI.CreateItem("Exit Drift Tuner", "Leave the Drift Tuner and return outside.")
+    menu:AddItem(exitTunerButton)
+
+    exitTunerButton.Activated = function(sender, item)
+        if item == exitTunerButton then
+            TriggerEvent('drift:exitTuner')
+            mainMenu:Visible(false)
+        end
+    end
+end
+
+
+
 -- "Seats menu"
 --[[ 
 seats = {-1,0,1,2}
@@ -196,23 +236,48 @@ end
 --]]
 
 DriftModeButton(mainMenu)
-
-ShowDriftCounterButton(mainMenu)
-
-ShowDriftLeaderboard(mainMenu)
+ExitDriftTunerButton(mainMenu)
 
 _menuPool:RefreshIndex()
+
+
+ShowDriftCounterButton(remoteMenu)
+ShowDriftLeaderboard(remoteMenu)
+
+_remoteMenuPool:RefreshIndex()
 
 
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
         _menuPool:ProcessMenus()
+        -- Block vehicle controls while in Drift Tuner and main menu is visible
+        if isInDriftTuner and mainMenu:Visible() then
+            DisableControlAction(0, 63, true) -- Vehicle controls
+            DisableControlAction(0, 64, true)
+            DisableControlAction(0, 71, true)
+            DisableControlAction(0, 72, true)
+            DisableControlAction(0, 75, true) -- Exit vehicle
+        end
+        -- Force menu to stay open while in Drift Tuner
+        if isInDriftTuner and not mainMenu:Visible() then
+            mainMenu:Visible(true)
+            SetCursorLocation(0.5, 0.5)
+        end
+    end
+end)
 
+
+-- Open remote menu with key
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        _remoteMenuPool:ProcessMenus()
+        
         -- Check if U is being pressed
         if IsControlJustPressed(1, 303) then
-            local isVisible = not mainMenu:Visible()
-            mainMenu:Visible(isVisible)
+            local isVisible = not remoteMenu:Visible()
+            remoteMenu:Visible(isVisible)
 
             if isVisible then
                 SetCursorLocation(0.5, 0.5)
@@ -228,6 +293,13 @@ Citizen.CreateThread(function()
                 EnableControlAction(0, 32, true)
                 EnableControlAction(0, 33, true)
             end
+            end
+            -- While remoteMenu is open, keep cursor centered and disable look controls
+            if remoteMenu:Visible() then
+                SetCursorLocation(0.5, 0.5)
+                SetMouseCursorActiveThisFrame()
+                DisableControlAction(0, 1, true)  -- Disable Look Left/Right
+                DisableControlAction(0, 2, true)  -- Disable Look Up/Down
         end
     end
 end)
