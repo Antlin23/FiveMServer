@@ -44,3 +44,35 @@ Citizen.CreateThread(function()
     TaskStartScenarioInPlace(ped, "WORLD_HUMAN_GUARD_STAND", 0, true) -- Guard stance
     table.insert(dancerPeds, ped)
 end)
+
+-- DJ
+Citizen.CreateThread(function()
+    local model = "ig_djtalignazio"
+    RequestModel(model)
+    while not HasModelLoaded(model) do
+        Wait(100)
+    end
+    local pos = vector4(-1381.44, -616.35, 31.50, 121.53)
+    local ped = CreatePed(4, model, pos.x, pos.y, pos.z - 1.0, pos.w, false, true)
+    SetEntityInvincible(ped, true)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    FreezeEntityPosition(ped, true)
+    TaskStartScenarioInPlace(ped, "WORLD_HUMAN_PARTYING", 0, true)
+    table.insert(dancerPeds, ped)
+end)
+
+-- Bartender
+Citizen.CreateThread(function()
+    local model = "s_f_y_clubbar_01"
+    RequestModel(model)
+    while not HasModelLoaded(model) do
+        Wait(100)
+    end
+    local pos = vector4(-1392.29, -604.46, 30.32, 114.86)
+    local ped = CreatePed(4, model, pos.x, pos.y, pos.z - 1.0, pos.w, false, true)
+    SetEntityInvincible(ped, true)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    FreezeEntityPosition(ped, true)
+    TaskStartScenarioInPlace(ped, "WORLD_HUMAN_BARTENDER", 0, true)
+    table.insert(dancerPeds, ped)
+end)
