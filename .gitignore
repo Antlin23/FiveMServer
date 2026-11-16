@@ -45,4 +45,4 @@ citizen/
 citizenfx/
 
 # Server configuration files (contain sensitive information)
-server.cfg 
+resources.cfg 

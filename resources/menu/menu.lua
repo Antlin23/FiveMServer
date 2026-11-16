@@ -126,12 +126,13 @@ end
 
 -- Drift mode button
 function DriftModeButton(menu)
+    local driftTuneCost = 100
+    
     local driftButton = NativeUI.CreateItem("Drift tune ($100,000)", "Install drift tune into this vehicle for $100,000 (cannot be reverted).")
     menu:AddItem(driftButton)
 
     driftButton.Activated = function(sender, item)
         local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-        local driftTuneCost = 10000
 
         if item == driftButton then
             if vehicle ~= 0 then
