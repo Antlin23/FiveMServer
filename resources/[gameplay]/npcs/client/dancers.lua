@@ -61,6 +61,22 @@ Citizen.CreateThread(function()
     table.insert(dancerPeds, ped)
 end)
 
+-- Booth dancer
+Citizen.CreateThread(function()
+    local model = "u_f_y_danceburl_01"
+    RequestModel(model)
+    while not HasModelLoaded(model) do
+        Wait(100)
+    end
+    local pos = vector4(-1379.8, -617.6, 31.7, 113.5)
+    local ped = CreatePed(4, model, pos.x, pos.y, pos.z - 1.0, pos.w, false, true)
+    SetEntityInvincible(ped, true)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    FreezeEntityPosition(ped, true)
+    TaskStartScenarioInPlace(ped, "stripper_idle_05", 0, true)
+    table.insert(dancerPeds, ped)
+end)
+
 -- Bartender
 Citizen.CreateThread(function()
     local model = "s_f_y_clubbar_01"

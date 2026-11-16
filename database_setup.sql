@@ -69,7 +69,7 @@ ON DUPLICATE KEY UPDATE `active` = 1;
 -- Insert default music tracks (you'll need to add the actual .ogg files)
 INSERT INTO `music_tracks` (`name`, `file`, `duration`, `category`) VALUES
 ('Electronic Beat', 'electronic_beat.ogg', 180, 'electronic'),
-('Hip Hop Mix', 'hiphop_mix.ogg', 240, 'hiphop'),
+('One Time', 'onetime.ogg', 240, 'hiphop'),
 ('Rock Anthem', 'rock_anthem.ogg', 200, 'rock'),
 ('Chill Vibes', 'chill_vibes.ogg', 300, 'chill')
 ON DUPLICATE KEY UPDATE `active` = 1;

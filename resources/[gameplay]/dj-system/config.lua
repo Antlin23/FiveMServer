@@ -40,8 +40,8 @@ Config.MusicTracks = {
         duration = 180 -- seconds
     },
     {
-        name = "Hip Hop Mix",
-        file = "hiphop_mix.ogg", 
+        name = "One Time",
+        file = "onetime.ogg", 
         duration = 240
     },
     {
